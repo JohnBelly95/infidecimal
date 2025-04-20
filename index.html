@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Επίδειξη Τυχαίων Ψηφίων</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .digit-display {
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            white-space: normal;
+            margin: 20px 0;
+            max-width: 100%;
+        }
+        .latest-digit {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .stats {
+            margin-top: 20px;
+            text-align: left;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .controls {
+            margin: 15px 0;
+        }
+        .explanation {
+            text-align: left;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        @media (max-width: 600px) {
+            .digit-display {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Η Άρρητη Φύση των Τυχαίων Ψηφίων</h1>
+        
+        <p>Αυτή η διαδραστική επίδειξη δείχνει γιατί η προσθήκη τυχαίων ψηφίων μετά από μια υποδιαστολή θα δημιουργήσει (σχεδόν σίγουρα) έναν άρρητο αριθμό.</p>
+        
+        <div class="digit-display" id="digits">0.</div>
+        
+        <div class="controls">
+            <button id="addDigit">Προσθήκη Τυχαίου Ψηφίου</button>
+            <button id="addTen">Προσθήκη 10 Ψηφίων</button>
+            <button id="addHundred">Προσθήκη 100 Ψηφίων</button>
+            <button id="reset">Επαναφορά</button>
+        </div>
+        
+        <div class="stats">
+            <p>Ψηφία που προστέθηκαν: <span id="digitCount">0</span></p>
+            <p>Κατανομή: 
+                <span id="distribution">Δεν έχουν προστεθεί ψηφία ακόμα</span>
+            </p>
+        </div>
+        
+        <div class="explanation">
+            <h3>Γιατί αυτό είναι μαθηματικά σημαντικό;</h3>
+            <p>Όταν προσθέτουμε πραγματικά τυχαία ψηφία μετά από μια υποδιαστολή επ' άπειρον, δημιουργούμε έναν αριθμό που δεν μπορεί να εκφραστεί ως κλάσμα (a/b όπου a και b είναι ακέραιοι). Αυτός είναι ο ορισμός ενός άρρητου αριθμού.</p>
+            <p>Να γιατί:</p>
+            <ul>
+                <li>Οι ρητοί αριθμοί έχουν δεκαδικές επεκτάσεις που είτε τερματίζουν είτε επαναλαμβάνονται.</li>
+                <li>Όταν τα ψηφία επιλέγονται τυχαία, η πιθανότητα να προκύψει ένα επαναλαμβανόμενο μοτίβο είναι ουσιαστικά μηδέν.</li>
+                <li>Επομένως, με πιθανότητα 1, ένας αριθμός με τυχαία ψηφία είναι άρρητος.</li>
+            </ul>
+            <p>Αυτή η επίδειξη δημιουργεί μια οπτική αναπαράσταση αυτής της έννοιας - γίνεστε μάρτυρες της "γέννησης" ενός άρρητου αριθμού μέσω της τυχαιότητας.</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const digitsDisplay = document.getElementById('digits');
+        const addDigitButton = document.getElementById('addDigit');
+        const addTenButton = document.getElementById('addTen');
+        const addHundredButton = document.getElementById('addHundred');
+        const resetButton = document.getElementById('reset');
+        const digitCountDisplay = document.getElementById('digitCount');
+        const distributionDisplay = document.getElementById('distribution');
+
+        // Initialize variables
+        let numberString = '0.';
+        let digitCount = 0;
+        const digitDistribution = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Counts for 0-9
+
+        // Add a single random digit
+        function addRandomDigit() {
+            const randomDigit = Math.floor(Math.random() * 10);
+            numberString += randomDigit;
+            digitCount++;
+            digitDistribution[randomDigit]++;
+            updateDisplay();
+        }
+
+        // Add multiple digits at once
+        function addMultipleDigits(count) {
+            // Disable buttons during processing
+            setButtonsEnabled(false);
+            
+            // Use setTimeout to allow UI to update
+            setTimeout(() => {
+                for (let i = 0; i < count; i++) {
+                    addRandomDigit();
+                }
+                setButtonsEnabled(true);
+            }, 10);
+        }
+
+        // Reset the demonstration
+        function reset() {
+            numberString = '0.';
+            digitCount = 0;
+            for (let i = 0; i < 10; i++) {
+                digitDistribution[i] = 0;
+            }
+            updateDisplay();
+        }
+
+        // Update the UI displays
+        function updateDisplay() {
+            // Handle the digit display with highlighting of the most recent digit
+            if (digitCount > 0) {
+                // Split the string to highlight the last digit
+                const mainPart = numberString.slice(0, -1);
+                const lastDigit = numberString.slice(-1);
+                digitsDisplay.innerHTML = mainPart + '<span class="latest-digit">' + lastDigit + '</span>';
+            } else {
+                digitsDisplay.textContent = numberString;
+            }
+            
+            // Update the count display
+            digitCountDisplay.textContent = digitCount;
+            
+            // Update the distribution display
+            if (digitCount > 0) {
+                let distText = '';
+                for (let i = 0; i < 10; i++) {
+                    const percentage = ((digitDistribution[i] / digitCount) * 100).toFixed(1);
+                    distText += `${i}: ${digitDistribution[i]} (${percentage}%) `;
+                }
+                distributionDisplay.textContent = distText;
+            } else {
+                distributionDisplay.textContent = 'Δεν έχουν προστεθεί ψηφία ακόμα';
+            }
+        }
+
+        // Helper to enable/disable buttons
+        function setButtonsEnabled(enabled) {
+            addDigitButton.disabled = !enabled;
+            addTenButton.disabled = !enabled;
+            addHundredButton.disabled = !enabled;
+            resetButton.disabled = !enabled;
+        }
+
+        // Event listeners
+        addDigitButton.addEventListener('click', () => addRandomDigit());
+        addTenButton.addEventListener('click', () => addMultipleDigits(10));
+        addHundredButton.addEventListener('click', () => addMultipleDigits(100));
+        resetButton.addEventListener('click', reset);
+    </script>
+</body>
+</html>
